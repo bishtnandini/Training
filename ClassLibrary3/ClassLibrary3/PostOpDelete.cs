@@ -8,23 +8,29 @@ namespace ClassLibrary3
     {
         public void Execute(IServiceProvider serviceProvider)
         {
-
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
-            IOrganizationServiceFactory factory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
-            IOrganizationService service = factory.CreateOrganizationService(context.InitiatingUserId);
 
+            // Ensure this is a Delete event for 'cr371_acc' entity
             if (context.PrimaryEntityName == "cr371_acc" && context.MessageName.ToLower() == "delete")
             {
-                DeleteContacts(service, context.PrimaryEntityId);
+                Guid deletedAccountId = context.PrimaryEntityId;
+
+                if (deletedAccountId == Guid.Empty)
+                    return;
+
+                IOrganizationServiceFactory factory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+                IOrganizationService service = factory.CreateOrganizationService(context.InitiatingUserId);
+
+                DeleteRelatedCussRecords(service, deletedAccountId);
             }
         }
 
-        private void DeleteContacts(IOrganizationService service, Guid accountId)
+        public void DeleteRelatedCussRecords(IOrganizationService service, Guid accountId)
         {
-            // Query to fetch contacts related to the deleted account
+           
             QueryExpression query = new QueryExpression("cr371_cuss")
             {
-                ColumnSet = new ColumnSet("cr371_cussid"),
+                ColumnSet = new ColumnSet(false), 
                 Criteria = new FilterExpression()
                 {
                     Conditions =
@@ -34,11 +40,12 @@ namespace ClassLibrary3
                 }
             };
 
-            EntityCollection contacts = service.RetrieveMultiple(query);
+            EntityCollection relatedRecords = service.RetrieveMultiple(query);
 
-            foreach (Entity contact in contacts.Entities)
+            // Ensure all related records are deleted
+            foreach (Entity record in relatedRecords.Entities)
             {
-                service.Delete("cr371_cuss", contact.Id);
+                service.Delete("cr371_cuss", record.Id);
             }
         }
     }
