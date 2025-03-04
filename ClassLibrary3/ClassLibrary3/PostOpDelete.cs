@@ -25,7 +25,7 @@ namespace ClassLibrary3
             }
         }
 
-        private void DeleteRelatedCussRecords(IOrganizationService service, Guid accountId)
+        public void DeleteRelatedCussRecords(IOrganizationService service, Guid accountId)
         {
            
             QueryExpression query = new QueryExpression("cr371_cuss")

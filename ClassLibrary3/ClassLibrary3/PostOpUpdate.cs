@@ -33,8 +33,13 @@ namespace ClassLibrary3
                 Entity updateAcc = new Entity("cr371_acc");
                 updateAcc.Id = context.PrimaryEntityId;
                 updateAcc["cr371_money"] = (address == 1 && addressCode == 1) ? new Money(500) : new Money(600);
+
+                
                 service.Update(updateAcc);
 
+                Entity updatedAccRecord = service.Retrieve("cr371_acc", context.PrimaryEntityId, new ColumnSet("cr371_money"));
+                Money upMoney = updatedAccRecord.GetAttributeValue<Money>("cr371_money");
+                
                 // Retrieve all related Customer (cr371_cuss) records using the lookup field
                 QueryExpression query = new QueryExpression("cr371_cuss")
                 {
@@ -55,7 +60,7 @@ namespace ClassLibrary3
                 {
                     Entity updateCustomer = new Entity("cr371_cuss");
                     updateCustomer.Id = customer.Id;
-                    updateCustomer["cr371_creditlimit"] = new Money(moneyValue.Value * 1.2M); // Example: Setting credit limit as 1.2x of money
+                    updateCustomer["cr371_creditlimit"] = new Money(upMoney.Value * 1.2M); // Example: Setting credit limit as 1.2x of money
                     service.Update(updateCustomer);
                 }
             }
