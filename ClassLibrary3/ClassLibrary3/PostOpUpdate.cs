@@ -21,25 +21,43 @@ namespace ClassLibrary3
             {
                 if (context.Depth > 1)
                     return;
-                Entity accRecord = service.Retrieve("cr371_acc", context.PrimaryEntityId, new ColumnSet("cr371_address1_freighttermscode", "cr371_address1_addresstypecode"));
-                int adress = accRecord.Contains("cr371_address1_freighttermscode") ? accRecord.GetAttributeValue<OptionSetValue>("cr371_address1_freighttermscode").Value : 1;
-                int adressCode = accRecord.Contains("cr371_address1_addresstypecode") ? accRecord.GetAttributeValue<OptionSetValue>("cr371_address1_addresstypecode").Value : 1;
 
-                Entity updatetoacc = new Entity("cr371_acc");
-                updatetoacc.Id = context.PrimaryEntityId;
 
-                if (adress == 1 && adressCode == 1)
+                Entity accRecord = service.Retrieve("cr371_acc", context.PrimaryEntityId, new ColumnSet("cr371_money", "cr371_address1_freighttermscode", "cr371_address1_addresstypecode"));
+
+                Money moneyValue = accRecord.Contains("cr371_money") ? accRecord.GetAttributeValue<Money>("cr371_money") : new Money(0);
+                int address = accRecord.Contains("cr371_address1_freighttermscode") ? accRecord.GetAttributeValue<OptionSetValue>("cr371_address1_freighttermscode").Value : 1;
+                int addressCode = accRecord.Contains("cr371_address1_addresstypecode") ? accRecord.GetAttributeValue<OptionSetValue>("cr371_address1_addresstypecode").Value : 1;
+
+                // Update Account money field
+                Entity updateAcc = new Entity("cr371_acc");
+                updateAcc.Id = context.PrimaryEntityId;
+                updateAcc["cr371_money"] = (address == 1 && addressCode == 1) ? new Money(500) : new Money(600);
+                service.Update(updateAcc);
+
+                // Retrieve all related Customer (cr371_cuss) records using the lookup field
+                QueryExpression query = new QueryExpression("cr371_cuss")
                 {
-                    updatetoacc["cr371_money"] = new Money(500);
-                }
-                else
+                    ColumnSet = new ColumnSet("cr371_creditlimit"),
+                    Criteria = new FilterExpression
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression("cr371_parentcustomerid", ConditionOperator.Equal, context.PrimaryEntityId)
+                        }
+                    }
+                };
+
+                EntityCollection relatedCustomers = service.RetrieveMultiple(query);
+
+                // Update cr371_creditlimit for each related cr371_cuss record
+                foreach (Entity customer in relatedCustomers.Entities)
                 {
-                    updatetoacc["cr371_money"] = new Money(600);
-
+                    Entity updateCustomer = new Entity("cr371_cuss");
+                    updateCustomer.Id = customer.Id;
+                    updateCustomer["cr371_creditlimit"] = new Money(moneyValue.Value * 1.2M); // Example: Setting credit limit as 1.2x of money
+                    service.Update(updateCustomer);
                 }
-
-                service.Update(updatetoacc);
-
             }
         }
     }

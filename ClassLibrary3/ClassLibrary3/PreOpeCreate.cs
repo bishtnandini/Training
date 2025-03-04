@@ -13,33 +13,53 @@ namespace ClassLibrary3
     {
         public void Execute(IServiceProvider serviceProvider)
         {
-            // Obtain the execution context
+
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
 
-            // Ensure the context contains a target entity (the record being created)
+            // Ensure the "Target" entity is present
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity entity)
             {
-                // Check if the entity contains the 'country' OptionSet field
-                if (entity.Contains("cr371_country") && entity["cr371_country"] is OptionSetValue)
+                // Validate if "cr371_country" is present
+                if (!entity.Contains("cr371_country") || !(entity["cr371_country"] is OptionSetValue countryOption))
                 {
-                    OptionSetValue countryOption = (OptionSetValue)entity["cr371_country"];
+                    throw new InvalidPluginExecutionException("Please select a country before saving the record.");
+                }
 
-                    // Check if the country OptionSet value is 2 (assuming 2 represents India)
-                    if (countryOption.Value == 2)
-                    {
-                        // Check if the mobile number field exists and is a string
-                        if (entity.Contains("cr371_mobileno") && entity["cr371_mobileno"] is string)
-                        {
-                            string mobileNumber = (string)entity["cr371_mobileno"];
+                int countryValue = countryOption.Value;
+                string requiredPrefix = string.Empty;
 
-                            // Append +91 if it's not already there
-                            if (!mobileNumber.StartsWith("+91"))
-                            {
-                                entity["cr371_mobileno"] = "+91" + mobileNumber;
-                                context.InputParameters["Target"] = entity;  // Ensure the modification is applied
-                            }
-                        }
-                    }
+                // Assign prefix based on country
+                switch (countryValue)
+                {
+                    case 1:
+                        requiredPrefix = "+96";
+                        break;
+                    case 2:
+                        requiredPrefix = "+91";
+                        break;
+                    case 3:
+                        requiredPrefix = "+88";
+                        break;
+                    default:
+                        throw new InvalidPluginExecutionException("Invalid country selection.");
+                }
+
+                // Check if "cr371_mobileno" exists and is not null or empty
+                if (!entity.Contains("cr371_mobileno") || entity["cr371_mobileno"] == null || string.IsNullOrWhiteSpace(entity["cr371_mobileno"].ToString()))
+                {
+                    throw new InvalidPluginExecutionException("Mobile number cannot be empty. Please provide a valid mobile number.");
+                }
+
+                string mobileNumber = entity["cr371_mobileno"].ToString();
+
+               
+                if (!mobileNumber.StartsWith(requiredPrefix))
+                {
+                    
+                    mobileNumber = requiredPrefix + mobileNumber;
+
+                   
+                    entity["cr371_mobileno"] = mobileNumber;
                 }
             }
         }
