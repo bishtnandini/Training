@@ -100,6 +100,7 @@
     <Compile Include="PostOpUpdate.cs" />
     <Compile Include="PreOpeCreate.cs" />
     <Compile Include="PreOpUpdate.cs" />
+    <Compile Include="PrePostImgesUpdate.cs" />
     <Compile Include="PreValiInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

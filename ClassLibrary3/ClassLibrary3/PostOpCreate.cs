@@ -25,7 +25,7 @@ namespace ClassLibrary3
             if (context.PrimaryEntityName == "cr371_acc")
             {
 
-                Entity accountRecord = service.Retrieve("cr371_acc", context.PrimaryEntityId, new ColumnSet("cr371_name", "cr371_mobileno", "cr371_money"));
+                Entity accountRecord = service.Retrieve("cr371_acc", context.PrimaryEntityId, new ColumnSet("cr371_name", "cr371_mobileno"));
 
                 if (accountRecord != null)
                 {
@@ -41,7 +41,7 @@ namespace ClassLibrary3
                     contactRecord["cr371_mobileno"] = phoneNumber;
                     contactRecord["cr371_parentcustomerid"] = new EntityReference("cr371_acc", context.PrimaryEntityId); // Lookup to Account
                     contactRecord["cr371_accountrolecode"] = new OptionSetValue(2);
-                    contactRecord["cr371_creditlimit"] = new Money(money.Value * 1.2M);
+                    contactRecord["cr371_creditlimit"] = new Money(100);
                     contactRecord["cr371_donotphone"] = true;
                     contactRecord["cr371_nmberofchildren"] = 0;
 
