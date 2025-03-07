@@ -27,6 +27,7 @@ namespace ClassLibrary3
                     Entity preImage = null;
                     if (context.PreEntityImages.Contains("PreImage") && context.PreEntityImages["PreImage"] is Entity)
                     {
+                      
                         preImage = context.PreEntityImages["PreImage"];
                     }
 
