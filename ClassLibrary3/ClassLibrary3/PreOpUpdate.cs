@@ -11,10 +11,11 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace ClassLibrary3
 {
-   public  class PreOpUpdate : IPlugin
+    public class PreOpUpdate : IPlugin
     {
         public void Execute(IServiceProvider serviceProvider)
         {
+
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
 
             // Ensure the context contains a target entity (the record being updated)
@@ -30,8 +31,6 @@ namespace ClassLibrary3
 
                 //Automatically update Last Modified Date
                 entity["modifiedon"] = DateTime.UtcNow;
-
-               
             }
         }
     }

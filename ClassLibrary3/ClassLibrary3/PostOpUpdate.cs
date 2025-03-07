@@ -22,31 +22,29 @@ namespace ClassLibrary3
                 if (context.Depth > 1)
                     return;
 
-
+                // Retrieve Account Record
                 Entity accRecord = service.Retrieve("cr371_acc", context.PrimaryEntityId, new ColumnSet("cr371_money", "cr371_address1_freighttermscode", "cr371_address1_addresstypecode"));
-
                 Money moneyValue = accRecord.Contains("cr371_money") ? accRecord.GetAttributeValue<Money>("cr371_money") : new Money(0);
                 int address = accRecord.Contains("cr371_address1_freighttermscode") ? accRecord.GetAttributeValue<OptionSetValue>("cr371_address1_freighttermscode").Value : 1;
                 int addressCode = accRecord.Contains("cr371_address1_addresstypecode") ? accRecord.GetAttributeValue<OptionSetValue>("cr371_address1_addresstypecode").Value : 1;
 
-                // Update Account money field
+                // Update Account Money Field
                 Entity updateAcc = new Entity("cr371_acc");
                 updateAcc.Id = context.PrimaryEntityId;
                 updateAcc["cr371_money"] = (address == 1 && addressCode == 1) ? new Money(500) : new Money(600);
-
-                
                 service.Update(updateAcc);
 
+                // Retrieve Updated Account Record
                 Entity updatedAccRecord = service.Retrieve("cr371_acc", context.PrimaryEntityId, new ColumnSet("cr371_money"));
                 Money upMoney = updatedAccRecord.GetAttributeValue<Money>("cr371_money");
-                
-                // Retrieve all related Customer (cr371_cuss) records using the lookup field
+
+                // Retrieve Related Customer Records
                 QueryExpression query = new QueryExpression("cr371_cuss")
                 {
-                    ColumnSet = new ColumnSet("cr371_creditlimit"),
+                    ColumnSet = new ColumnSet("cr371_fullname"),
                     Criteria = new FilterExpression
                     {
-                        Conditions =
+                        Conditions = 
                         {
                             new ConditionExpression("cr371_parentcustomerid", ConditionOperator.Equal, context.PrimaryEntityId)
                         }
@@ -55,12 +53,12 @@ namespace ClassLibrary3
 
                 EntityCollection relatedCustomers = service.RetrieveMultiple(query);
 
-                // Update cr371_creditlimit for each related cr371_cuss record
+                // Update cr371_creditlimit for Each Related Customer Record
                 foreach (Entity customer in relatedCustomers.Entities)
                 {
                     Entity updateCustomer = new Entity("cr371_cuss");
                     updateCustomer.Id = customer.Id;
-                    updateCustomer["cr371_creditlimit"] = new Money(upMoney.Value * 1.2M); // Example: Setting credit limit as 1.2x of money
+                    updateCustomer["cr371_creditlimit"] = new Money(upMoney.Value * 1.2M);
                     service.Update(updateCustomer);
                 }
             }
