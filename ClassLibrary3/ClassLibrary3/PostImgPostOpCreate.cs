@@ -43,7 +43,7 @@ namespace ClassLibrary3
                     contactRecord["cr371_mobileno"] = phoneNumber;
                     contactRecord["cr371_parentcustomerid"] = new EntityReference("cr371_acc", context.PrimaryEntityId);
                     contactRecord["cr371_accountrolecode"] = new OptionSetValue(2);
-                    contactRecord["cr371_creditlimit"] = new Money(100);
+                    //contactRecord["cr371_creditlimit"] = new Money(100);
                     contactRecord["cr371_donotphone"] = true;
                     contactRecord["cr371_nmberofchildren"] = 0;
 

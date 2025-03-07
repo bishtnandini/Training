@@ -31,17 +31,18 @@ namespace ClassLibrary3
                 {
                     string accountName = accountRecord.GetAttributeValue<string>("cr371_name");
                     string phoneNumber = accountRecord.GetAttributeValue<string>("cr371_mobileno");
-                    Money money = accountRecord.GetAttributeValue<Money>("cr371_money");
+                   
+
 
 
                     Entity contactRecord = new Entity("cr371_cuss");
 
 
-                    contactRecord["cr371_fullname"] = accountName;
+                    //contactRecord["cr371_fullname"] = accountName;
                     contactRecord["cr371_mobileno"] = phoneNumber;
                     contactRecord["cr371_parentcustomerid"] = new EntityReference("cr371_acc", context.PrimaryEntityId); // Lookup to Account
                     contactRecord["cr371_accountrolecode"] = new OptionSetValue(2);
-                    contactRecord["cr371_creditlimit"] = new Money(100);
+                    //contactRecord["cr371_creditlimit"] = new Money(100);
                     contactRecord["cr371_donotphone"] = true;
                     contactRecord["cr371_nmberofchildren"] = 0;
 
