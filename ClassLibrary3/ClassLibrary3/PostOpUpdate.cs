@@ -41,7 +41,7 @@ namespace ClassLibrary3
                 // Retrieve Related Customer Records
                 QueryExpression query = new QueryExpression("cr371_cuss")
                 {
-                    ColumnSet = new ColumnSet("cr371_fullname"),
+                    ColumnSet = new ColumnSet(false),
                     Criteria = new FilterExpression
                     {
                         Conditions = 
