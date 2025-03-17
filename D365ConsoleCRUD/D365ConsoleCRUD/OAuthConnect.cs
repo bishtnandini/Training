@@ -14,10 +14,11 @@ namespace D365ConsoleCRUD
         {
             Console.WriteLine("Connecting to D365 server....");
             string authType = "OAuth";
-            string userName ="";
-            string password = "";
-            string url = "";
-            string appId = "";
+            string userName = "nandini@llcscg.com";
+           
+            string password = "Symbiotic1234";
+            string url = "https://org346b45b2.crm.dynamics.com";
+            string appId = "251bc6da-4b84-439b-9eb6-65745883a411";
             string reDirectURI ="https://localhost";
             string loginPrompt = "Auto";
             string ConnectionString = string.Format("AuthType ={0}; Username={1}; Password ={2}; Url= {3}; AppId={4}; RedirectUri={5}; LoginPrompt={6}",
