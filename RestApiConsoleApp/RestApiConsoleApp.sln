@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestApiConsoleApp", "RestApiConsoleApp\RestApiConsoleApp.csproj", "{10902A42-EA68-4B5C-AD5C-5261C855028E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10902A42-EA68-4B5C-AD5C-5261C855028E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10902A42-EA68-4B5C-AD5C-5261C855028E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10902A42-EA68-4B5C-AD5C-5261C855028E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10902A42-EA68-4B5C-AD5C-5261C855028E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3A75A9C-25F2-4E59-B0D6-06C72E00EE3E}
+	EndGlobalSection
+EndGlobal
